@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gi Group</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Unbounded:wght@300;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --accent: #00c896;
+    --accent-dim: rgba(0,200,150,0.12);
+    --text: #e8e8e8;
+    --text-dim: #888;
+    --text-muted: #555;
+    --present-bg: #0a1a15;
+    --present-border: #00c89640;
+    --header-h: 56px;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* HEADER */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .search-wrap {
+    flex: 1;
+    position: relative;
+  }
+
+  #search {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 7px 10px 7px 30px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  #search:focus { border-color: var(--accent); }
+  #search::placeholder { color: var(--text-muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 9px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    font-size: 12px;
+  }
+
+  .header-counts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+    line-height: 1.35;
+  }
+
+  .hc-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .hc-item::before {
+    font-size: 9px;
+    margin-right: 2px;
+  }
+
+  .hc-item:nth-child(1)::before { content: "Список"; color: var(--text-muted); }
+  .hc-item:nth-child(2)::before { content: "17:00"; }
+  .hc-item:nth-child(3)::before { content: "19:00"; }
+
+  .hc-present { color: var(--accent); }
+
+  .btn-save {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 8px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity .2s;
+  }
+  .btn-save:active { opacity: .7; }
+
+  /* MAIN */
+  main {
+    padding-top: calc(var(--header-h) + 8px);
+    padding-bottom: 24px;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 14px 12px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label.present-label {
+    color: var(--accent);
+    border-bottom-color: var(--present-border);
+  }
+
+  .hc-item:nth-child(1) { color: var(--text-muted); }
+  .hc-item:nth-child(1) span { color: var(--accent); }
+
+  /* PERSON CARD */
+  .person {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 7px 12px; /* ← ВІДСТУПИ РЯДКА — змінюй тут (верх/низ горизонт) */
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    transition: background .15s;
+    position: relative;
+  }
+
+  .person.present-item {
+    background: var(--present-bg);
+    border-bottom-color: var(--present-border);
+  }
+
+  .person:active { background: var(--surface); }
+  .person.present-item:active { background: var(--present-bg); }
+
+  /* AVATAR */
+  .avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 7px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: block;
+    cursor: zoom-in;
+    transition: opacity .15s;
+  }
+  .avatar:active { opacity: .75; }
+
+  .avatar-placeholder {
+    width: 52px;
+    height: 52px;
+    border-radius: 7px;
+    flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* INFO */
+  .info {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.3;
+  }
+
+  .name-en {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    white-space: normal;
+    word-break: break-word;
+    cursor: pointer;
+    display: inline-block;
+    max-width: 100%;
+    border-radius: 3px;
+    transition: color .15s;
+  }
+  .name-en:active { color: var(--accent); }
+
+  .avatar-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+
+  .flag-below {
+    font-size: 13px;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .name-ua {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .viber-name {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .phone {
+    font-size: 13px;
+    color: var(--accent);
+    margin-top: 2px;
+    font-weight: 600;
+    min-height: 16px;
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.93);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    cursor: zoom-out;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .lightbox.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 88vh;
+    border-radius: 10px;
+    object-fit: contain;
+    box-shadow: 0 8px 60px rgba(0,0,0,.9);
+    transform: scale(0.88);
+    transition: transform .28s cubic-bezier(.22,.68,0,1.2);
+  }
+  .lightbox.active img {
+    transform: scale(1);
+  }
+  .lightbox-name {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Unbounded', sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    white-space: nowrap;
+    letter-spacing: .05em;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .lightbox-name-ua {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* COPY TOAST */
+  .copy-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: transform .25s ease;
+    z-index: 300;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* BUTTONS COLUMN */
+  .btn-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  /* CHECKBOX */
+  .check-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s, border-color .15s;
+    -webkit-user-select: none;
+    user-select: none;
+    position: relative;
+  }
+
+  .check-btn:active { opacity: .7; }
+
+  .check-btn.checked-present {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check-btn.checked-17 {
+    background: #f59e0b;
+    border-color: #f59e0b;
+  }
+  .check-btn.checked-19 {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+  }
+
+  .check-btn svg {
+    width: 12px;
+    height: 12px;
+    stroke: #000;
+    stroke-width: 2.5;
+    fill: none;
+    opacity: 0;
+    transition: opacity .15s;
+  }
+  .check-btn.checked-present svg,
+  .check-btn.checked-17 svg,
+  .check-btn.checked-19 svg { opacity: 1; }
+
+  .check-btn .btn-label {
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 7px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    font-family: 'JetBrains Mono', monospace;
+    pointer-events: none;
+  }
+
+  /* NAME EN WRAP */
+  .name-en-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  /* EDIT BUTTON — прихована, появляється при наведенні */
+  .edit-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-muted);
+    font-size: 10px;
+    padding: 1px 4px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    transition: color .15s, border-color .15s, opacity .2s;
+    line-height: 1.4;
+    flex-shrink: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .name-en-wrap:hover .edit-btn,
+  .name-en-wrap:focus-within .edit-btn {
+    opacity: 1;
+    pointer-events: all;
+  }
+  /* На мобільних — показуємо при активному стані картки */
+  .person:active .edit-btn,
+  .edit-btn-visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .edit-btn:active { color: var(--accent); border-color: var(--accent); }
+
+  /* EDIT MODAL */
+  .edit-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .edit-modal.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .edit-modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 340px;
+  }
+  .edit-modal-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    letter-spacing: .1em;
+  }
+  .edit-modal input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 9px 10px;
+    outline: none;
+    margin-bottom: 12px;
+  }
+  .edit-modal input:focus { border-color: var(--accent); }
+  .edit-modal-btns {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .edit-modal-btns button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    transition: opacity .15s;
+  }
+  .edit-modal-btns button.save {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .edit-modal-btns button:active { opacity: .7; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--text-muted);
+    font-size: 12px;
+    display: none;
+  }
+
+  /* SAVED BADGE */
+  .saved-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--accent);
+    color: #000;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 8px;
+    transition: transform .3s ease;
+    z-index: 200;
+    pointer-events: none;
+  }
+  .saved-toast.show { transform: translateX(-50%) translateY(0); }
+
+  #no-results {
+    padding: 32px 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    display: none;
+  }
+
+  #section-17, #section-19 { display: none; }
+
+  .person.item-17 {
+    background: #1a1200;
+    border-bottom-color: #f59e0b30;
+  }
+  .person.item-17:active { background: #1a1200; }
+
+  .person.item-19 {
+    background: #110d1a;
+    border-bottom-color: #8b5cf630;
+  }
+  .person.item-19:active { background: #110d1a; }
+
+  .btn-col {
+    padding-bottom: 4px;
+  }
+
+  @keyframes cardOut {
+    0%   { opacity: 1; transform: translateX(0) scaleY(1); max-height: 100px; }
+    40%  { opacity: .4; transform: translateX(18px) scaleY(1); }
+    100% { opacity: 0; transform: translateX(40px) scaleY(0.6); max-height: 0; padding-top: 0; padding-bottom: 0; }
+  }
+  .card-removing {
+    overflow: hidden;
+    animation: cardOut .38s cubic-bezier(.4,0,.6,1) forwards;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">Gi Group</span>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="search" id="search" placeholder="Пошук..." autocomplete="off">
+  </div>
+  <div class="header-counts">
+    <span class="hc-item">· <span id="count">0</span></span>
+    <span class="hc-item" style="color:#f59e0b">· <span id="count-17-top">0</span></span>
+    <span class="hc-item" style="color:#8b5cf6">· <span id="count-19-top">0</span></span>
+  </div>
+  <button class="btn-save" onclick="saveData()">Save</button>
+</header>
+
+<main>
+  <div id="main-section">
+    <div id="people-list"></div>
+    <div id="no-results">Нікого не знайдено</div>
+  </div>
+
+  <div id="section-17" style="display:none">
+    <div class="section-label" style="color:#f59e0b; border-bottom-color:#f59e0b40">Люди від 17:00 · <span id="count-17">0</span></div>
+    <div id="list-17"></div>
+  </div>
+
+  <div id="section-19" style="display:none">
+    <div class="section-label" style="color:#8b5cf6; border-bottom-color:#8b5cf640">Люди від 19:00 · <span id="count-19">0</span></div>
+    <div id="list-19"></div>
+  </div>
+</main>
+
+<div class="saved-toast" id="toast">✓ Збережено</div>
+<div class="copy-toast" id="copy-toast"></div>
+
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-name">
+    <span id="lightbox-name-en"></span>
+    <span class="lightbox-name-ua" id="lightbox-name-ua"></span>
+  </div>
+</div>
+
+<div class="edit-modal" id="edit-modal">
+  <div class="edit-modal-box">
+    <div class="edit-modal-title">РЕДАГУВАТИ ІМ'Я (EN)</div>
+    <input type="text" id="edit-input" autocomplete="off">
+    <div class="edit-modal-btns">
+      <button onclick="closeEditModal()">Скасувати</button>
+      <button class="save" onclick="saveEditModal()">Зберегти</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║           СПИСОК ЛЮДЕЙ — редагуй тут                       ║
+// ║                                                              ║
+// ║  en    — прізвище та ім'я англійською (унікальний ID)       ║
+// ║  ua    — прізвище та ім'я українською                       ║
+// ║  viber — нікнейм у Viber                                    ║
+// ║  phone — номер телефону                                     ║
+// ║  photo — шлях до фото (відносно HTML-файлу)                 ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+const PEOPLE = [
+
+  {
+    en:    "Adashynskyi Kostiantyn",
+    ua:    "Адашинський Костянтин",
+    viber: "Адашинський Костя",
+    phone: "+380 96 751 7530",
+    photo: "photos/adashynskyi_kostiantyn.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Anosov Oleksandr",
+    ua:    "Аносов Олександр",
+    viber: "Anosov Oleksandr",
+    phone: "+380 99 331 7814",
+    photo: "photos/anosov_oleksandr.jpg",
+    flag:  "🇺🇦",
+  },
+    {
+    en:    "Bokoch Mykhailo",
+    ua:    "Бокоч Михайло",
+    viber: "Bokoch Misha",
+    phone: "+380 68 229 2395",
+    photo: "photos/bokoch_mykhailo.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Chesnokov Pavlo",
+    ua:    "Чесноков Павло",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/chesnokov_pavlo.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Chonka Ivan",
+    ua:    "Чонка Іван",
+    viber: "Чонка Іван",
+    phone: "+380 68 099 4850",
+    photo: "photos/chonka_ivan.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Csaba Ruszó",
+    ua:    "Чаба Русзо",
+    viber: "Csaba Ruszó",
+    phone: "+421 91 109 5906",
+    photo: "photos/csaba_ruszo.jpg",
+    flag:  "🇨🇿",
+  },
+  {
+    en:    "Dvornikov Oleksii",
+    ua:    "Дворніков Олексій",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/dvornikov_oleksii.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Dziuba Maksym",
+    ua:    "Дзюба Максим",
+    viber: "Максим",
+    phone: "+420 73 262 6674",
+    photo: "photos/dziuba_maksym.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Dzyngel Oleksandr",
+    ua:    "Дзингель Олександр",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/dzyngel_oleksandr.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Furman Tomasz Jan",
+    ua:    "Фурман Томаш Ян",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/furman_tomasz_jan.jpg",
+    flag:  "🇵🇱",
+  },
+  {
+    en:    "Goran Oleg",
+    ua:    "Горан Олег",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/goran_oleg.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Huk Yaroslav",
+    ua:    "Гук Ярослав",
+    viber: "Yaroslav",
+    phone: "+420 77 654 7561",
+    photo: "photos/huk_yaroslav.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Kahramanyan Dmytro",
+    ua:    "Каграманян Дмитро",
+    viber: "Dmitro",
+    phone: "+420 73 771 3278",
+    photo: "photos/kahramanyan_dmytro.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Kapatsyna Vladyslav",
+    ua:    "Капацина Владислав",
+    viber: "Владичка",
+    phone: "+420 79 762 6052",
+    photo: "photos/kapatsyna_vladyslav.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Klymenko Oleksandr",
+    ua:    "Клименко Олександр",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/klymenko_oleksandr.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Kushnir Ivan",
+    ua:    "Кушнір Іван",
+    viber: "Іван",
+    phone: "+380 96 382 4084",
+    photo: "photos/kushnir_ivan.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Kuzyk Rostyslav",
+    ua:    "Кузик Ростислав",
+    viber: "Кузик Ростислав",
+    phone: "+380 63 844 8729",
+    photo: "photos/kuzyk_rostyslav.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Makieiev Oleksandr",
+    ua:    "Макєєв Олександр",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/makieiev_oleksandr.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Martseniuk Iryna",
+    ua:    "Марценюк Ірина",
+    viber: "Іra Martseniuk",
+    phone: "+380 63 982 1417",
+    photo: "photos/martseniuk_iryna.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Miroshnichenko Andrii",
+    ua:    "Мірошниченко Андрій",
+    viber: "Andrey",
+    phone: "+380 66 014 5135",
+    photo: "photos/miroshnichenko_andrii.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Nahorniuk Oleksandr",
+    ua:    "Нагорнюк Олександр",
+    viber: "Саша",
+    phone: "+420 77 067 1326",
+    photo: "photos/nahorniuk_oleksandr.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Chetverykov Nikita",
+    ua:    "Четвериков Нікіта ",
+    viber: "Никита Четвериков",
+    phone: "+380 99 099 1097",
+    photo: "photos/nikita_chetverykov.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Nosov Dmytro",
+    ua:    "Носов Дмитро",
+    viber: "Dmitry",
+    phone: "+380 96 474 1834",
+    photo: "photos/nosov_dmytro.jpg",
+    flag:  "🇺🇦",
+	},
+    {
+    en:    "Orel Illia",
+    ua:    "Орел Ілля",
+    viber: "Ilюша",
+    phone: "Орел Ілля",
+    photo: "photos/orel_illia.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Orel Vladyslav",
+    ua:    "Орел Владислав",
+    viber: "Влад",
+    phone: "+380 68 283 3185",
+    photo: "photos/orel_vladyslav.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Orlaniuk Vita",
+    ua:    "Орланюк Віта",
+    viber: "Вита",
+    phone: "+380 93 793 3926",
+    photo: "photos/orlaniuk_vita.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Pavliuk Vladyslav",
+    ua:    "Павлюк Владислав",
+    viber: "Vlad",
+    phone: "+380 63 606 9863",
+    photo: "photos/pavliuk_vladyslav.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Petriv Mykhailo",
+    ua:    "Петрів Михайло",
+    viber: "Михайло",
+    phone: "+380 97 018 3884",
+    photo: "photos/petriv_mykhailo.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Poluianov Denys",
+    ua:    "Полуянов Денис",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/poluianov_denys.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Ponomarenko Oleh",
+    ua:    "Пономаренко Олег",
+    viber: "Олег Пономаренко",
+    phone: "+380 96 285 4923",
+    photo: "photos/ponomarenko_oleh.jpg",
+    flag:  "🇺🇦",
+  },
+    {
+    en:    "Popadynets Oleksandr",
+    ua:    "Попадинець Олександр",
+    viber: "Oleksandr Popadynets",
+    phone: "+420 60 611 5201",
+    photo: "photos/popadynets_oleksandr.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Popovych Stanislav",
+    ua:    "Попович Станіслав",
+    viber: "Stanislav",
+    phone: "+380 66 024 2505",
+    photo: "photos/popovych_stanislav.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Radouš Jan",
+    ua:    "Радоуш Ян",
+    viber: "Jan Radous",
+    phone: "+420 77 705 8364",
+    photo: "photos/radous_jan.jpg",
+    flag:  "🇨🇿",
+  },
+  {
+    en:    "Robu Artem",
+    ua:    "Робу Артем",
+    viber: "Артем",
+    phone: "+380 97 254 0596",
+    photo: "photos/robu_artem.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Shyshkovychev Kyrylo",
+    ua:    "Шишковичев Кирило",
+    viber: "Кирилл Шишковичев",
+    phone: "+380 95 085 5590",
+    photo: "photos/shyshkovychev_kyrylo.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Siedov Yehor",
+    ua:    "Сєдов Єгор",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/siedov_yehor.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Sirenko Vitalii",
+    ua:    "Сіренко Віталій",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/sirenko_vitalii.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Snarskyi Vasyl",
+    ua:    "Снарський Василь",
+    viber: "Васёк",
+    phone: "+420 72 803 7814",
+    photo: "photos/snarskyi_vasyl.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Srebniuk Denys",
+    ua:    "Срібнюк Денис",
+    viber: "Денис",
+    phone: "+380 98 026 2269",
+    photo: "photos/srebniuk_denys.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Stateczny Adam Wojciech",
+    ua:    "Статечний Адам Войцех",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/stateczny_adam.jpg",
+    flag:  "🇵🇱",
+  },
+  {
+    en:    "Stefanov Stefan Hristov",
+    ua:    "Стефанов Стефан Христов",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/stefanov_stefan.jpg",
+    flag:  "🇵🇱",
+  },
+  {
+    en:    "Stetsiuk Oleh - DPČ",
+    ua:    "Стецюк Олег",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/stetsiuk_oleh.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Stoliar Yevhenii",
+    ua:    "Столяр Євгеній",
+    viber: "Євген Столяр",
+    phone: "+380 68 062 7715",
+    photo: "photos/stoliar_yevhenii.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Sviatokha Valentyn",
+    ua:    "Святоха Валентин",
+    viber: "Valentyn",
+    phone: "+420 60 648 3082",
+    photo: "photos/sviatokha_valentyn.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Šanderová Kristyna",
+    ua:    "Шандерова Крістіна",
+    viber: "Kristýnka",
+    phone: "+420 60 701 2823",
+    photo: "photos/sanderova_kristyna.jpg",
+    flag:  "🇨🇿",
+  },
+  {
+    en:    "Tsybulko Nataliia",
+    ua:    "Цибулько Наталія",
+    viber: "Talia Tsibulko",
+    phone: "+420 72 201 2894",
+    photo: "photos/tsybulko_nataliia.jpg",
+    flag:  "🇺🇦",
+  },
+    {
+    en:    "Tyshchenko Yurii - DPČ",
+    ua:    "Тищенко Юрій",
+    viber: "Юра Тищенко",
+    phone: "+380 95 535 2213",
+    photo: "photos/tyshchenko_yurii.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Vagner Michal",
+    ua:    "Вагнер Міхал",
+    viber: "Michal Vágner",
+    phone: "+420 72 126 2136",
+    photo: "photos/vagner_michal.jpg",
+    flag:  "🇨🇿",
+  },
+  {
+    en:    "Vraštil Petr",
+    ua:    "Враштіл Петр",
+    viber: "Petr Vraštil",
+    phone: "+420 60 340 0085",
+    photo: "photos/vrastil_petr.jpg",
+    flag:  "🇨🇿",
+  },
+  {
+    en:    "Zaňková Markéta",
+    ua:    "Занькова Маркета",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/zankova_marketa.jpg",
+    flag:  "🇨🇿",
+  },
+  {
+    en:    "Zarovnenko Oleksandr",
+    ua:    "Заровненко Олександр",
+    viber: "Саша Заровненко",
+    phone: "+380 99 449 5383",
+    photo: "photos/zarovnenko_oleksandr.jpg",
+    flag:  "🇺🇦",
+  },
+  {
+    en:    "Zieniewicz Arkadiusz Sebastian",
+    ua:    "Зєнєвіч Аркадіуш Себастіан",
+    viber: "Name",
+    phone: "+380 00 000 00",
+    photo: "photos/zieniewicz_arkadiusz.jpg",
+    flag:  "🇵🇱",
+  },
+
+];
+// ══════════════════════════════════════════════════════════════
+
+// Сортування ВИМКНЕНО — порядок задається вручну вище у масиві PEOPLE
+// Щоб увімкнути сортування за алфавітом — розкоментуй рядок нижче:
+// PEOPLE.sort((a, b) => a.en.localeCompare(b.en));
+
+// State
+let set17 = [];
+let set19 = [];
+let editingName = null;
+let editedNames = {}; // { originalEn: newName }
+
+function loadData() {
+  try {
+    const s17 = localStorage.getItem('gi_group_17');
+    if (s17) set17 = JSON.parse(s17);
+    const s19 = localStorage.getItem('gi_group_19');
+    if (s19) set19 = JSON.parse(s19);
+    const sEdit = localStorage.getItem('gi_group_edits');
+    if (sEdit) {
+      editedNames = JSON.parse(sEdit);
+      // Застосовуємо збережені імена до масиву PEOPLE
+      Object.entries(editedNames).forEach(([orig, newN]) => {
+        const p = PEOPLE.find(x => x._origEn === orig || x.en === orig);
+        if (p) { p._origEn = p._origEn || orig; p.en = newN; }
+      });
+    }
+  } catch(e) {}
+}
+
+function saveData() {
+  try {
+    localStorage.setItem('gi_group_17', JSON.stringify(set17));
+    localStorage.setItem('gi_group_19', JSON.stringify(set19));
+    localStorage.setItem('gi_group_edits', JSON.stringify(editedNames));
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  } catch(e) {}
+}
+
+function getInitials(name) {
+  const parts = name.trim().split(' ');
+  return (parts[0]?.[0] || '') + (parts[1]?.[0] || '');
+}
+
+function createCard(person, listType) {
+  // listType: 'main' | 'present' | '17' | '19'
+  const div = document.createElement('div');
+  let cls = 'person';
+  if (listType === 'present') cls += ' present-item';
+  if (listType === '17') cls += ' item-17';
+  if (listType === '19') cls += ' item-19';
+  div.className = cls;
+
+  // Avatar wrapper
+  const avatarWrap = document.createElement('div');
+  avatarWrap.className = 'avatar-wrap';
+
+  const img = document.createElement('img');
+  img.className = 'avatar';
+  img.src = person.photo;
+  img.alt = person.en;
+  img.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openLightbox(person.photo, person.en, person.ua);
+  });
+  img.onerror = function() {
+    const ph = document.createElement('div');
+    ph.className = 'avatar-placeholder';
+    ph.textContent = getInitials(person.en);
+    this.replaceWith(ph);
+  };
+
+  const flagEl = document.createElement('div');
+  flagEl.className = 'flag-below';
+  flagEl.textContent = person.flag || '';
+
+  avatarWrap.appendChild(img);
+  avatarWrap.appendChild(flagEl);
+
+  // Info
+  const info = document.createElement('div');
+  info.className = 'info';
+
+  // EN ім'я + іконка редагування поруч
+  const nameEnWrap = document.createElement('div');
+  nameEnWrap.className = 'name-en-wrap';
+
+  const nameEn = document.createElement('div');
+  nameEn.className = 'name-en';
+  nameEn.textContent = person.en;
+  nameEn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    copyToClipboard(person.en);
+  });
+
+  const editBtn = document.createElement('button');
+  editBtn.className = 'edit-btn';
+  editBtn.textContent = '✎';
+  editBtn.title = 'Редагувати ім\'я';
+  editBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openEditModal(person.en);
+  });
+
+  // Показуємо edit-btn при тапі на мобільному
+  nameEnWrap.addEventListener('touchstart', () => {
+    editBtn.classList.toggle('edit-btn-visible');
+  }, { passive: true });
+
+  nameEnWrap.appendChild(nameEn);
+  nameEnWrap.appendChild(editBtn);
+
+  const nameUa = document.createElement('div');
+  nameUa.className = 'name-ua';
+  nameUa.textContent = person.ua;
+
+  const viber = document.createElement('div');
+  viber.className = 'viber-name';
+  viber.textContent = `Viber: ${person.viber}`;
+
+  const phone = document.createElement('div');
+  phone.className = 'phone';
+  phone.textContent = person.phone || '';
+
+  info.appendChild(nameEnWrap);
+  info.appendChild(nameUa);
+  info.appendChild(viber);
+  info.appendChild(phone);
+
+  // Галочки вертикально
+  const rightCol = document.createElement('div');
+  rightCol.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:20px; flex-shrink:0;'; // ← GAP між галочками — змінюй тут
+
+  // Галочка "17:00"
+  const btn17 = document.createElement('div');
+  btn17.className = 'check-btn' + (listType === '17' ? ' checked-17' : '');
+  btn17.innerHTML = `<svg viewBox="0 0 16 16"><polyline points="2,8 6,12 14,4"/></svg><span class="btn-label">17:00</span>`;
+  btn17.addEventListener('click', (e) => {
+    e.stopPropagation();
+    btn17.classList.toggle('checked-17');
+    div.classList.add('card-removing');
+    const savedScroll = window.scrollY;
+    setTimeout(() => toggleList(person.en, '17', savedScroll), 360);
+  });
+
+  // Галочка "19:00"
+  const btn19 = document.createElement('div');
+  btn19.className = 'check-btn' + (listType === '19' ? ' checked-19' : '');
+  btn19.innerHTML = `<svg viewBox="0 0 16 16"><polyline points="2,8 6,12 14,4"/></svg><span class="btn-label">19:00</span>`;
+  btn19.addEventListener('click', (e) => {
+    e.stopPropagation();
+    btn19.classList.toggle('checked-19');
+    div.classList.add('card-removing');
+    const savedScroll = window.scrollY;
+    setTimeout(() => toggleList(person.en, '19', savedScroll), 360);
+  });
+
+  rightCol.appendChild(btn17);
+  rightCol.appendChild(btn19);
+
+  div.appendChild(avatarWrap);
+  div.appendChild(info);
+  div.appendChild(rightCol);
+  return div;
+}
+
+function openLightbox(src, nameEn, nameUa) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-name-en').textContent = nameEn;
+  document.getElementById('lightbox-name-ua').textContent = nameUa || '';
+  lb.classList.add('active');
+}
+
+document.getElementById('lightbox').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('active');
+});
+
+let copyTimer = null;
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const t = document.getElementById('copy-toast');
+    t.textContent = `✓ Скопійовано: ${text}`;
+    t.classList.add('show');
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => t.classList.remove('show'), 2000);
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const t = document.getElementById('copy-toast');
+    t.textContent = `✓ Скопійовано: ${text}`;
+    t.classList.add('show');
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => t.classList.remove('show'), 2000);
+  });
+}
+
+function toggleList(name, listType, savedScroll) {
+  const isRemoving17 = set17.includes(name);
+  const isRemoving19 = set19.includes(name);
+
+  set17 = set17.filter(n => n !== name);
+  set19 = set19.filter(n => n !== name);
+
+  const wasInTarget = (listType === '17' && isRemoving17) ||
+                      (listType === '19' && isRemoving19);
+
+  if (!wasInTarget) {
+    if (listType === '17') set17.push(name);
+    else if (listType === '19') set19.push(name);
+  }
+
+  render(document.getElementById('search').value);
+
+  if (wasInTarget && savedScroll !== undefined) {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: savedScroll, behavior: 'instant' });
+    });
+  }
+}
+
+// Edit modal
+function openEditModal(currentName) {
+  editingName = currentName;
+  document.getElementById('edit-input').value = currentName;
+  document.getElementById('edit-modal').classList.add('active');
+  setTimeout(() => document.getElementById('edit-input').focus(), 100);
+}
+
+function closeEditModal() {
+  editingName = null;
+  document.getElementById('edit-modal').classList.remove('active');
+}
+
+function saveEditModal() {
+  const newName = document.getElementById('edit-input').value.trim();
+  if (!newName || !editingName) { closeEditModal(); return; }
+
+  const person = PEOPLE.find(p => p.en === editingName);
+  if (person) {
+    const origKey = person._origEn || editingName;
+    person._origEn = origKey;
+    // Оновлюємо в списках
+    const i17 = set17.indexOf(editingName);
+    if (i17 !== -1) set17[i17] = newName;
+    const i19 = set19.indexOf(editingName);
+    if (i19 !== -1) set19[i19] = newName;
+    person.en = newName;
+    // Зберігаємо в localStorage
+    editedNames[origKey] = newName;
+    try { localStorage.setItem('gi_group_edits', JSON.stringify(editedNames)); } catch(e) {}
+  }
+  closeEditModal();
+  render(document.getElementById('search').value);
+}
+
+document.getElementById('edit-modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('edit-modal')) closeEditModal();
+});
+document.getElementById('edit-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') saveEditModal();
+  if (e.key === 'Escape') closeEditModal();
+});
+
+function render(query = '') {
+  const q = query.toLowerCase().trim();
+  const peopleList = document.getElementById('people-list');
+  const list17     = document.getElementById('list-17');
+  const list19     = document.getElementById('list-19');
+  const noResults  = document.getElementById('no-results');
+  const section17  = document.getElementById('section-17');
+  const section19  = document.getElementById('section-19');
+
+  peopleList.innerHTML = '';
+  list17.innerHTML     = '';
+  list19.innerHTML     = '';
+
+  const inAnyList = n => set17.includes(n) || set19.includes(n);
+  const mainPeople = PEOPLE.filter(p => !inAnyList(p.en));
+  const people17   = set17.map(n => PEOPLE.find(p => p.en === n)).filter(Boolean);
+  const people19   = set19.map(n => PEOPLE.find(p => p.en === n)).filter(Boolean);
+
+  const match = p => !q || p.en.toLowerCase().includes(q) || p.ua.toLowerCase().includes(q);
+
+  const filtered   = mainPeople.filter(match);
+  const filtered17 = people17.filter(match);
+  const filtered19 = people19.filter(match);
+
+  filtered.forEach(p => peopleList.appendChild(createCard(p, 'main')));
+  document.getElementById('count').textContent = filtered.length;
+  noResults.style.display = filtered.length === 0 && mainPeople.length > 0 ? 'block' : 'none';
+
+  document.getElementById('count-17-top').textContent = people17.length;
+  document.getElementById('count-19-top').textContent = people19.length;
+
+  if (people17.length > 0) {
+    section17.style.display = 'block';
+    document.getElementById('count-17').textContent = filtered17.length;
+    filtered17.forEach(p => list17.appendChild(createCard(p, '17')));
+  } else {
+    section17.style.display = 'none';
+  }
+
+  if (people19.length > 0) {
+    section19.style.display = 'block';
+    document.getElementById('count-19').textContent = filtered19.length;
+    filtered19.forEach(p => list19.appendChild(createCard(p, '19')));
+  } else {
+    section19.style.display = 'none';
+  }
+}
+
+// Init
+loadData();
+render();
+
+document.getElementById('search').addEventListener('input', e => render(e.target.value));
+
+// Auto-save on page hide
+window.addEventListener('pagehide', saveData);
+window.addEventListener('beforeunload', saveData);
+</script>
+</body>
+</html>
