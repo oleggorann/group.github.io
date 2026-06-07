@@ -76,23 +76,6 @@
   #search:focus { border-color: var(--accent); }
   #search::placeholder { color: var(--text-muted); }
 
-  /* ✕ Хрестик очищення пошуку — змінюй font-size щоб збільшити/зменшити */
-  #search::-webkit-search-cancel-button {
-    -webkit-appearance: none;
-    appearance: none;
-    height: 16px;       /* ← РОЗМІР — змінюй це число (px) */
-    width: 16px;        /* ← РОЗМІР — змінюй це число (px) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cline x1='2' y1='2' x2='14' y2='14' stroke='%2300c896' stroke-width='2.2' stroke-linecap='round'/%3E%3Cline x1='14' y1='2' x2='2' y2='14' stroke='%2300c896' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-size: contain;
-    background-repeat: no-repeat;
-    cursor: pointer;
-    opacity: 0.8;
-    transition: opacity .15s;
-  }
-  #search::-webkit-search-cancel-button:hover {
-    opacity: 1;
-  }
-
   .search-icon {
     position: absolute;
     left: 9px; top: 50%;
@@ -251,14 +234,9 @@
   }
 
   .flag-below {
-    font-size: 8px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    letter-spacing: .06em;
-    color: var(--text-muted);
-    text-align: center;
+    font-size: 13px;
     line-height: 1;
-    margin-top: 1px;
+    text-align: center;
   }
 
   .name-ua {
@@ -290,7 +268,6 @@
     background: rgba(0,0,0,0.93);
     z-index: 500;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
@@ -298,7 +275,6 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity .25s ease;
-    gap: 16px;
   }
   .lightbox.active {
     opacity: 1;
@@ -306,83 +282,37 @@
   }
   .lightbox img {
     max-width: 100%;
-    max-height: 55vh;
+    max-height: 88vh;
     border-radius: 10px;
     object-fit: contain;
     box-shadow: 0 8px 60px rgba(0,0,0,.9);
     transform: scale(0.88);
     transition: transform .28s cubic-bezier(.22,.68,0,1.2);
-    flex-shrink: 0;
   }
   .lightbox.active img {
     transform: scale(1);
   }
-  /* Картка з інформацією під фото */
-  .lightbox-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 18px;
-    width: 100%;
-    max-width: 340px;
+  .lightbox-name {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Unbounded', sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    white-space: nowrap;
+    letter-spacing: .05em;
+    text-align: center;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    cursor: default;
-    transform: translateY(10px);
-    transition: transform .28s cubic-bezier(.22,.68,0,1.2);
-  }
-  .lightbox.active .lightbox-card {
-    transform: translateY(0);
-  }
-  .lb-name-en {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: .02em;
-  }
-  .lb-name-ua {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-bottom: 4px;
-  }
-  .lb-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 2px 0;
-  }
-  .lb-row {
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    gap: 3px;
   }
-  .lb-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .lb-value {
+  .lightbox-name-ua {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    font-weight: 600;
-    color: var(--accent);
-    text-align: right;
-    word-break: break-word;
+    color: rgba(255,255,255,0.3);
   }
-  .lb-value.muted {
-    color: var(--text-muted);
-    font-weight: 400;
-  }
-  .lb-value.yellow { color: #f59e0b; }
-  .lb-value.phone  { color: var(--accent); font-size: 12px; }
-  /* Старий .lightbox-name — залишаємо порожнім для сумісності */
-  .lightbox-name { display: none; }
-  .lightbox-name-ua { display: none; }
 
   /* COPY TOAST */
   .copy-toast {
@@ -533,67 +463,6 @@
     width: 100%;
     max-width: 340px;
   }
-  /* Інфо-панель у модальному вікні */
-  .edit-modal-info {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .edit-modal-info-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .edit-modal-info-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .edit-modal-info-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--accent);
-    text-align: right;
-  }
-  .edit-modal-info-value.empty {
-    color: var(--text-muted);
-    font-weight: 400;
-    font-style: italic;
-  }
-  .edit-modal-info-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 2px 0;
-  }
-
-  /* Секція під кнопками: інфо + Dovolená */
-  .edit-modal-bottom {
-    margin-top: 14px;
-    border-top: 1px solid var(--border);
-    padding-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .edit-modal-section-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 9px;
-    font-weight: 300;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-
   .edit-modal-title {
     font-family: 'Unbounded', sans-serif;
     font-size: 10px;
@@ -620,21 +489,20 @@
     justify-content: flex-end;
   }
   .edit-modal-btns button {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 7px 14px;
     border-radius: 6px;
     cursor: pointer;
-    border: none;
+    border: 1px solid var(--border);
     background: var(--surface2);
-    color: var(--text-dim);
+    color: var(--text);
     transition: opacity .15s;
-    letter-spacing: .02em;
   }
   .edit-modal-btns button.save {
     background: var(--accent);
     color: #000;
+    border-color: var(--accent);
     font-weight: 600;
   }
   .edit-modal-btns button:active { opacity: .7; }
@@ -703,113 +571,7 @@
     animation: cardOut .38s cubic-bezier(.4,0,.6,1) forwards;
     pointer-events: none;
   }
-
-  /* ── Кнопка експорту ── */
-  .export-bottom-btn {
-    display: block;
-    width: calc(100% - 24px);
-    margin: 20px 12px 8px;
-    padding: 12px 16px;
-    background: var(--surface2);
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-align: center;
-    transition: background .15s, border-color .15s, color .15s;
-  }
-  .export-bottom-btn:hover {
-    background: var(--surface);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .export-bottom-btn:active {
-    opacity: .7;
-  }
-
-  /* ── Export toast ── */
-  .export-toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(60px);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--accent);
-    font-family: 'Unbounded', sans-serif;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 9px 18px;
-    border-radius: 8px;
-    transition: transform .3s ease, opacity .3s ease;
-    z-index: 210;
-    pointer-events: none;
-    opacity: 0;
-    white-space: nowrap;
-  }
-  .export-toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
-
-  /* Sync toast — статус збереження */
-  .sync-toast {
-    position: fixed;
-    bottom: 70px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 10px 18px;
-    border-radius: 8px;
-    transition: transform .3s ease, opacity .3s ease;
-    z-index: 250;
-    pointer-events: none;
-    opacity: 0;
-    white-space: nowrap;
-  }
-  .sync-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-  .sync-toast.ok    { background: #166534; color: #bbf7d0; border: 1px solid #16a34a; }
-  .sync-toast.error { background: #7f1d1d; color: #fecaca; border: 1px solid #ef4444; }
-  .sync-toast.warn  { background: #78350f; color: #fef3c7; border: 1px solid #f59e0b; }
-
-  /* Скелетон завантаження */
-  .skeleton-item {
-    display: flex; align-items: center; gap: 11px;
-    padding: 10px 12px; border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-  .skeleton-avatar {
-    width: 52px; height: 52px; border-radius: 7px;
-    background: var(--surface2); flex-shrink: 0;
-    position: relative; overflow: hidden;
-  }
-  .skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 7px; }
-  .skeleton-line {
-    height: 10px; border-radius: 4px; background: var(--surface2);
-    position: relative; overflow: hidden;
-  }
-  .skeleton-line.w80 { width: 80%; }
-  .skeleton-line.w55 { width: 55%; }
-  .skeleton-line.w40 { width: 40%; }
-  @keyframes shimmer {
-    0%   { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
-  .skeleton-avatar::after, .skeleton-line::after {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
-    animation: shimmer 1.4s infinite;
-  }
 </style>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -824,21 +586,12 @@
     <span class="hc-item" style="color:#f59e0b">· <span id="count-17-top">0</span></span>
     <span class="hc-item" style="color:#8b5cf6">· <span id="count-19-top">0</span></span>
   </div>
-  <button class="btn-save" id="btn-save-main" onclick="saveData()">Save</button>
+  <button class="btn-save" onclick="saveData()">Save</button>
 </header>
 
 <main>
   <div id="main-section">
-    <div id="people-list">
-      <div id="skeleton-list">
-        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-lines"><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div><div class="skeleton-line w40"></div></div></div>
-        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-lines"><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div><div class="skeleton-line w40"></div></div></div>
-        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-lines"><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div><div class="skeleton-line w40"></div></div></div>
-        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-lines"><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div><div class="skeleton-line w40"></div></div></div>
-        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-lines"><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div><div class="skeleton-line w40"></div></div></div>
-        <div class="skeleton-item"><div class="skeleton-avatar"></div><div class="skeleton-lines"><div class="skeleton-line w80"></div><div class="skeleton-line w55"></div><div class="skeleton-line w40"></div></div></div>
-      </div>
-    </div>
+    <div id="people-list"></div>
     <div id="no-results">Нікого не знайдено</div>
   </div>
 
@@ -851,55 +604,13 @@
     <div class="section-label" style="color:#8b5cf6; border-bottom-color:#8b5cf640">Люди від 19:00 · <span id="count-19">0</span></div>
     <div id="list-19"></div>
   </div>
-  <!-- Кнопка експорту — в самому низу після всіх списків -->
-  <button class="export-bottom-btn" onclick="exportToCSV()">↓ Export seznamu</button>
-
 </main>
 
 <div class="saved-toast" id="toast">✓ Збережено</div>
-<div class="export-toast" id="export-toast">✓ Експортовано</div>
 <div class="copy-toast" id="copy-toast"></div>
-<div class="sync-toast" id="sync-toast"></div>
 
 <div class="lightbox" id="lightbox">
   <img id="lightbox-img" src="" alt="">
-  <!-- Картка з інформацією під фото -->
-  <div class="lightbox-card" id="lightbox-card">
-    <div class="lb-name-en" id="lb-name-en"></div>
-    <div class="lb-name-ua" id="lb-name-ua"></div>
-    <div class="lb-divider"></div>
-    <div class="lb-row" id="lb-flag-row">
-      <span class="lb-label">Країна</span>
-      <span class="lb-value" id="lb-flag" style="font-family:'Unbounded',sans-serif;font-size:11px;letter-spacing:.06em;">—</span>
-    </div>
-    <div class="lb-row" id="lb-city-row">
-      <span class="lb-label">Město ČR</span>
-      <span class="lb-value" id="lb-city">—</span>
-    </div>
-    <div class="lb-divider"></div>
-    <div class="lb-row">
-      <span class="lb-label">Viber</span>
-      <span class="lb-value" id="lb-viber">—</span>
-    </div>
-    <div class="lb-row">
-      <span class="lb-label">Тел.</span>
-      <span class="lb-value phone" id="lb-phone">—</span>
-    </div>
-    <div class="lb-divider"></div>
-    <div class="lb-row" id="lb-locker-row">
-      <span class="lb-label">Skříňka</span>
-      <span class="lb-value" id="lb-locker">—</span>
-    </div>
-    <div class="lb-row" id="lb-dispatcher-row">
-      <span class="lb-label">Dispečer</span>
-      <span class="lb-value" id="lb-dispatcher">—</span>
-    </div>
-    <div class="lb-row" id="lb-dovolena-row" style="display:none">
-      <span class="lb-label">Dovolená</span>
-      <span class="lb-value yellow" id="lb-dovolena">—</span>
-    </div>
-  </div>
-  <!-- Залишаємо для сумісності -->
   <div class="lightbox-name">
     <span id="lightbox-name-en"></span>
     <span class="lightbox-name-ua" id="lightbox-name-ua"></span>
@@ -908,25 +619,12 @@
 
 <div class="edit-modal" id="edit-modal">
   <div class="edit-modal-box">
-
-    <!-- Поле вводу імені -->
+    <div class="edit-modal-title">РЕДАГУВАТИ ІМ'Я (EN)</div>
     <input type="text" id="edit-input" autocomplete="off">
-
-    <!-- Dovolená — одразу під іменем -->
-    <div class="edit-modal-section-title" style="margin-bottom:6px">Dovolena</div>
-    <input type="text" id="dovolena-input" autocomplete="off" placeholder="DOV - PN - ABS - NEP - dort">
-
-    <!-- Кнопки -->
     <div class="edit-modal-btns">
-      <button onclick="closeEditModal()">Cancel</button>
-      <button class="save" onclick="saveEditModal()">Save</button>
+      <button onclick="closeEditModal()">Скасувати</button>
+      <button class="save" onclick="saveEditModal()">Зберегти</button>
     </div>
-
-    <!-- Приховані елементи для сумісності з JS (info-locker тощо) -->
-    <span id="info-locker" style="display:none"></span>
-    <span id="info-dispatcher" style="display:none"></span>
-    <span id="info-city" style="display:none"></span>
-
   </div>
 </div>
 
@@ -943,7 +641,6 @@
 
 const PEOPLE = [
 
-
   {
     en:    "Adashynskyi Kostiantyn",
     ua:    "Адашинський Костянтин",
@@ -951,10 +648,6 @@ const PEOPLE = [
     phone: "+380 96 751 7530",
     photo: "photos/adashynskyi_kostiantyn.jpg",
     flag:  "🇺🇦",
-    locker: 85,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "Hradec Králové",
-    dovolena:   "", 
   },
   {
     en:    "Anosov Oleksandr",
@@ -963,22 +656,14 @@ const PEOPLE = [
     phone: "+380 99 331 7814",
     photo: "photos/anosov_oleksandr.jpg",
     flag:  "🇺🇦",
-    locker: 103,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
-    {
+   {
     en:    "Artem Lutsenko",
     ua:    "Артем Луценко",
     viber: "Артем Луценко",
     phone: "+380 97 167 6619",
     photo: "photos/artem_lutsenkor.jpg",
     flag:  "🇺🇦",
-    locker: 76,
-    dispatcher: "3 Hala",
-    city:       "Hradec Králové",
-    dovolena:   "", 
   },
     {
     en:    "Bokoch Mykhailo",
@@ -987,22 +672,14 @@ const PEOPLE = [
     phone: "+380 68 229 2395",
     photo: "photos/bokoch_mykhailo.jpg",
     flag:  "🇺🇦",
-    locker: 105,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Chesnokov Pavlo",
     ua:    "Чесноков Павло",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/chesnokov_pavlo.jpg",
     flag:  "🇺🇦",
-    locker: 88,
-    dispatcher: "",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Chonka Ivan",
@@ -1011,22 +688,22 @@ const PEOPLE = [
     phone: "+380 68 099 4850",
     photo: "photos/chonka_ivan.jpg",
     flag:  "🇺🇦",
-    locker: 77,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Hradec Králové",
-    dovolena:   "", 
+  },
+  {
+    en:    "Csaba Ruszó",
+    ua:    "Чаба Русзо",
+    viber: "Csaba Ruszó",
+    phone: "+421 91 109 5906",
+    photo: "photos/csaba_ruszo.jpg",
+    flag:  "🇨🇿",
   },
   {
     en:    "Dvornikov Oleksii",
     ua:    "Дворніков Олексій",
-    viber: "Алексей",
-    phone: "+380 97 863 0641",
+    viber: "Name",
+    phone: "+380 00 000 00",
     photo: "photos/dvornikov_oleksii.jpg",
     flag:  "🇺🇦",
-    locker: 100,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Dziuba Maksym",
@@ -1035,46 +712,30 @@ const PEOPLE = [
     phone: "+420 73 262 6674",
     photo: "photos/dziuba_maksym.jpg",
     flag:  "🇺🇦",
-    locker: 73,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Hradec Králové",
-    dovolena:   "", 
   },
   {
     en:    "Dzyngel Oleksandr",
     ua:    "Дзингель Олександр",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/dzyngel_oleksandr.jpg",
     flag:  "🇺🇦",
-    locker: 9,
-    dispatcher: "3 Hala",
-    city:       "Pardubice",
-    dovolena:   "", 
   },
   {
     en:    "Furman Tomasz Jan",
     ua:    "Фурман Томаш Ян",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/furman_tomasz_jan.jpg",
     flag:  "🇵🇱",
-    locker: 80,
-    dispatcher: "",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Goran Oleg",
     ua:    "Горан Олег",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/goran_oleg.jpg",
     flag:  "🇺🇦",
-    locker: 78,
-    dispatcher: "Kuba",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Kahramanyan Dmytro",
@@ -1083,10 +744,6 @@ const PEOPLE = [
     phone: "+420 73 771 3278",
     photo: "photos/kahramanyan_dmytro.jpg",
     flag:  "🇺🇦",
-    locker: 74,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Hradec Králové - Ubytovna",
-    dovolena:   "", 
   },
   {
     en:    "Kapatsyna Vladyslav",
@@ -1095,10 +752,6 @@ const PEOPLE = [
     phone: "+420 79 762 6052",
     photo: "photos/kapatsyna_vladyslav.jpg",
     flag:  "🇺🇦",
-    locker: 108,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Kushnir Ivan",
@@ -1107,10 +760,6 @@ const PEOPLE = [
     phone: "+380 96 382 4084",
     photo: "photos/kushnir_ivan.jpg",
     flag:  "🇺🇦",
-    locker: 109,
-    dispatcher: "",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Kuzyk Rostyslav",
@@ -1119,22 +768,6 @@ const PEOPLE = [
     phone: "+380 63 844 8729",
     photo: "photos/kuzyk_rostyslav.jpg",
     flag:  "🇺🇦",
-    locker: 18,
-    dispatcher: "",
-    city:       "Hradec Králové",
-    dovolena:   "", 
-  },
-  {
-    en:    "Makieiev Oleksandr",
-    ua:    "Макєєв Олександр",
-    viber: "Саша",
-    phone: "+420 79 247 0486",
-    photo: "photos/makieiev_oleksandr.jpg",
-    flag:  "🇺🇦",
-    locker: 99,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Martseniuk Iryna",
@@ -1143,10 +776,6 @@ const PEOPLE = [
     phone: "+380 63 982 1417",
     photo: "photos/martseniuk_iryna.jpg",
     flag:  "🇺🇦",
-    locker: 37,
-    dispatcher: "3 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Miroshnichenko Andrii",
@@ -1155,10 +784,6 @@ const PEOPLE = [
     phone: "+380 66 014 5135",
     photo: "photos/miroshnichenko_andrii.jpg",
     flag:  "🇺🇦",
-    locker: 90,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Hradec Králové",
-    dovolena:   "", 
   },
   {
     en:    "Chetverykov Nikita",
@@ -1167,10 +792,6 @@ const PEOPLE = [
     phone: "+380 99 099 1097",
     photo: "photos/nikita_chetverykov.jpg",
     flag:  "🇺🇦",
-    locker: 101,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Nosov Dmytro",
@@ -1179,10 +800,6 @@ const PEOPLE = [
     phone: "+380 96 474 1834",
     photo: "photos/nosov_dmytro.jpg",
     flag:  "🇺🇦",
-    locker: 86,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Hradec Králové",
-    dovolena:   "", 
 	},
     {
     en:    "Orel Illia",
@@ -1191,10 +808,6 @@ const PEOPLE = [
     phone: "+380 97 932 9452",
     photo: "photos/orel_illia.jpg",
     flag:  "🇺🇦",
-    locker: 99,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "Hradec Králové - Ubytovna",
-    dovolena:   "", 
   },
   {
     en:    "Orel Vladyslav",
@@ -1203,10 +816,6 @@ const PEOPLE = [
     phone: "+380 68 283 3185",
     photo: "photos/orel_vladyslav.jpg",
     flag:  "🇺🇦",
-    locker: 99,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Hradec Králové - Ubytovna",
-    dovolena:   "", 
   },
   {
     en:    "Orlaniuk Vita",
@@ -1215,10 +824,6 @@ const PEOPLE = [
     phone: "+380 93 793 3926",
     photo: "photos/orlaniuk_vita.jpg",
     flag:  "🇺🇦",
-    locker: 36,
-    dispatcher: "Michal - 1 Hala",
-    city:       "Hradec Králové",
-    dovolena:   "", 
   },
   {
     en:    "Pavliuk Vladyslav",
@@ -1227,10 +832,6 @@ const PEOPLE = [
     phone: "+380 63 606 9863",
     photo: "photos/pavliuk_vladyslav.jpg",
     flag:  "🇺🇦",
-    locker: 114,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "Hradec Králové - Ubytovna",
-    dovolena:   "", 
   },
   {
     en:    "Petriv Mykhailo",
@@ -1239,22 +840,6 @@ const PEOPLE = [
     phone: "+380 97 018 3884",
     photo: "photos/petriv_mykhailo.jpg",
     flag:  "🇺🇦",
-    locker: 115,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "Nechanice",
-    dovolena:   "", 
-  },
-  {
-    en:    "Poluianov Denys",
-    ua:    "Полуянов Денис",
-    viber: "Name",
-    phone: "+380 XX XXX XX XX",
-    photo: "photos/poluianov_denys.jpg",
-    flag:  "🇺🇦",
-    locker: 113,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Nový Bydžov",
-    dovolena:   "", 
   },
   {
     en:    "Ponomarenko Oleh",
@@ -1263,10 +848,14 @@ const PEOPLE = [
     phone: "+380 96 285 4923",
     photo: "photos/ponomarenko_oleh.jpg",
     flag:  "🇺🇦",
-    locker: 98,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Hradec Králové",
-    dovolena:   "", 
+  },
+    {
+    en:    "Popadynets Oleksandr",
+    ua:    "Попадинець Олександр",
+    viber: "Oleksandr Popadynets",
+    phone: "+420 60 611 5201",
+    photo: "photos/popadynets_oleksandr.jpg",
+    flag:  "🇺🇦",
   },
   {
     en:    "Popovych Stanislav",
@@ -1275,22 +864,6 @@ const PEOPLE = [
     phone: "+380 66 024 2505",
     photo: "photos/popovych_stanislav.jpg",
     flag:  "🇺🇦",
-    locker: 0,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "",
-    dovolena:   "", 
-  },
-	{
-    en:    "Ruszó Csaba",
-    ua:    "Русзо Чаба",
-    viber: "Csaba Ruszó",
-    phone: "+421 91 109 5906",
-    photo: "photos/csaba_ruszo.jpg",
-    flag:  "🇨🇿",
-    locker: 104,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "Jaroměř",
-    dovolena:   "", 
   },
   {
     en:    "Robu Artem",
@@ -1299,34 +872,22 @@ const PEOPLE = [
     phone: "+380 97 254 0596",
     photo: "photos/robu_artem.jpg",
     flag:  "🇺🇦",
-    locker: 110,
-    dispatcher: "2 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Siedov Yehor",
     ua:    "Сєдов Єгор",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/siedov_yehor.jpg",
     flag:  "🇺🇦",
-    locker: 75,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Sirenko Vitalii",
     ua:    "Сіренко Віталій",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/sirenko_vitalii.jpg",
     flag:  "🇺🇦",
-    locker: 96,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Snarskyi Vasyl",
@@ -1335,10 +896,6 @@ const PEOPLE = [
     phone: "+420 72 803 7814",
     photo: "photos/snarskyi_vasyl.jpg",
     flag:  "🇺🇦",
-    locker: 112,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "Nový Bydžov",
-    dovolena:   "", 
   },
   {
     en:    "Srebniuk Denys",
@@ -1347,46 +904,30 @@ const PEOPLE = [
     phone: "+380 98 026 2269",
     photo: "photos/srebniuk_denys.jpg",
     flag:  "🇺🇦",
-    locker: 87,
-    dispatcher: "",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Stateczny Adam Wojciech",
     ua:    "Статечний Адам Войцех",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/stateczny_adam.jpg",
     flag:  "🇵🇱",
-    locker: 79,
-    dispatcher: "",
-    city:       "Hradec Králové",
-    dovolena:   "", 
   },
   {
     en:    "Stefanov Stefan Hristov",
     ua:    "Стефанов Стефан Христов",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/stefanov_stefan.jpg",
     flag:  "🇵🇱",
-    locker: 41,
-    dispatcher: "3 Hala",
-    city:       "Pardubice",
-    dovolena:   "", 
   },
   {
     en:    "Stetsiuk Oleh - DPČ",
     ua:    "Стецюк Олег",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/stetsiuk_oleh.jpg",
     flag:  "🇺🇦",
-    locker: 89,
-    dispatcher: "",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Stoliar Yevhenii",
@@ -1395,10 +936,6 @@ const PEOPLE = [
     phone: "+380 68 062 7715",
     photo: "photos/stoliar_yevhenii.jpg",
     flag:  "🇺🇦",
-    locker: 81,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Sviatokha Valentyn",
@@ -1407,22 +944,6 @@ const PEOPLE = [
     phone: "+420 60 648 3082",
     photo: "photos/sviatokha_valentyn.jpg",
     flag:  "🇺🇦",
-    locker: 97,
-    dispatcher: "",
-    city:       "",
-    dovolena:   "", 
-  },
-  {
-    en:    "Šanderová Kristyna",
-    ua:    "Шандерова Крістіна",
-    viber: "Kristýnka",
-    phone: "+420 60 701 2823",
-    photo: "photos/sanderova_kristyna.jpg",
-    flag:  "🇨🇿",
-    locker: 40,
-    dispatcher: "",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Tsybulko Nataliia",
@@ -1431,22 +952,14 @@ const PEOPLE = [
     phone: "+420 72 201 2894",
     photo: "photos/tsybulko_nataliia.jpg",
     flag:  "🇺🇦",
-    locker: 41,
-    dispatcher: "Michal - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
-  	{
+    {
     en:    "Tymofeyev Serhiy",
     ua:    "Тимофєєв Сергій",
     viber: "Serhii",
     phone: "+420 60 781 2358",
     photo: "photos/tymofeyev_serhiy.jpg",
     flag:  "🇺🇦",
-    locker: 103,
-    dispatcher: "Michal - 2 Hala",
-    city:       "Pardubice",
-    dovolena:   "", 
   },
   {
     en:    "Vagner Michal",
@@ -1455,10 +968,6 @@ const PEOPLE = [
     phone: "+420 72 126 2136",
     photo: "photos/vagner_michal.jpg",
     flag:  "🇨🇿",
-    locker: 92,
-    dispatcher: "Michal - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Vraštil Petr",
@@ -1467,22 +976,14 @@ const PEOPLE = [
     phone: "+420 60 340 0085",
     photo: "photos/vrastil_petr.jpg",
     flag:  "🇨🇿",
-    locker: 102,
-    dispatcher: "Matěj - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Zaňková Markéta",
     ua:    "Занькова Маркета",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/zankova_marketa.jpg",
     flag:  "🇨🇿",
-    locker: [27, 28, 39, 30],
-    dispatcher: "3 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Zarovnenko Oleksandr",
@@ -1491,22 +992,14 @@ const PEOPLE = [
     phone: "+380 99 449 5383",
     photo: "photos/zarovnenko_oleksandr.jpg",
     flag:  "🇺🇦",
-	locker: 106,
-    dispatcher: "Kuba - 1 Hala",
-    city:       "",
-    dovolena:   "", 
   },
   {
     en:    "Zieniewicz Arkadiusz Sebastian",
     ua:    "Зєнєвіч Аркадіуш Себастіан",
     viber: "Name",
-    phone: "+380 XX XXX XX XX",
+    phone: "+380 00 000 00",
     photo: "photos/zieniewicz_arkadiusz.jpg",
     flag:  "🇵🇱",
-    locker: 51,
-    dispatcher: "",
-    city:       "",
-    dovolena:   "", 
   },
 
 ];
@@ -1523,13 +1016,32 @@ let editingName = null;
 let editedNames = {}; // { originalEn: newName }
 
 function loadData() {
-  // Всі дані — тільки з Firebase через dbRef.on('value')
+  try {
+    const s17 = localStorage.getItem('gi_group_17');
+    if (s17) set17 = JSON.parse(s17);
+    const s19 = localStorage.getItem('gi_group_19');
+    if (s19) set19 = JSON.parse(s19);
+    const sEdit = localStorage.getItem('gi_group_edits');
+    if (sEdit) {
+      editedNames = JSON.parse(sEdit);
+      // Застосовуємо збережені імена до масиву PEOPLE
+      Object.entries(editedNames).forEach(([orig, newN]) => {
+        const p = PEOPLE.find(x => x._origEn === orig || x.en === orig);
+        if (p) { p._origEn = p._origEn || orig; p.en = newN; }
+      });
+    }
+  } catch(e) {}
 }
 
 function saveData() {
-  const toast = document.getElementById('toast');
-  if (toast) { toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000); }
-  if (typeof syncToFirebase === 'function') syncToFirebase();
+  try {
+    localStorage.setItem('gi_group_17', JSON.stringify(set17));
+    localStorage.setItem('gi_group_19', JSON.stringify(set19));
+    localStorage.setItem('gi_group_edits', JSON.stringify(editedNames));
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  } catch(e) {}
 }
 
 function getInitials(name) {
@@ -1556,29 +1068,18 @@ function createCard(person, listType) {
   img.alt = person.en;
   img.addEventListener('click', (e) => {
     e.stopPropagation();
-    openLightbox(person);
+    openLightbox(person.photo, person.en, person.ua);
   });
   img.onerror = function() {
     const ph = document.createElement('div');
     ph.className = 'avatar-placeholder';
     ph.textContent = getInitials(person.en);
-    ph.style.cursor = 'pointer';
-    ph.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openLightbox(person);
-    });
     this.replaceWith(ph);
   };
 
   const flagEl = document.createElement('div');
   flagEl.className = 'flag-below';
-  // Конвертуємо emoji прапор → текстовий код (UA, CZ, PL тощо)
-  const flagMap = {
-    '🇺🇦': 'UA', '🇨🇿': 'CZ', '🇵🇱': 'PL', '🇸🇰': 'SK',
-    '🇩🇪': 'DE', '🇷🇴': 'RO', '🇭🇺': 'HU', '🇷🇺': 'RU',
-    '🇧🇾': 'BY', '🇲🇩': 'MD', '🇱🇹': 'LT', '🇱🇻': 'LV',
-  };
-  flagEl.textContent = flagMap[person.flag] || person.flag || '';
+  flagEl.textContent = person.flag || '';
 
   avatarWrap.appendChild(img);
   avatarWrap.appendChild(flagEl);
@@ -1624,17 +1125,6 @@ function createCard(person, listType) {
   viber.className = 'viber-name';
   viber.textContent = `Viber: ${person.viber}`;
 
- // Там де персон доволена в фігурних душках перед тим риска і пробіл
-  const dovolenaEl = document.createElement('div');
-  dovolenaEl.className = 'viber-name';
-  dovolenaEl.style.cssText = 'color:#f59e0b; font-size:11px;';
-  if (person.dovolena) {
-    dovolenaEl.textContent = `-  ${person.dovolena}`;
-    dovolenaEl.style.display = 'block';
-  } else {
-    dovolenaEl.style.display = 'none';
-  }
-
   const phone = document.createElement('div');
   phone.className = 'phone';
   phone.textContent = person.phone || '';
@@ -1642,7 +1132,6 @@ function createCard(person, listType) {
   info.appendChild(nameEnWrap);
   info.appendChild(nameUa);
   info.appendChild(viber);
-  info.appendChild(dovolenaEl);
   info.appendChild(phone);
 
   // Галочки вертикально
@@ -1682,111 +1171,15 @@ function createCard(person, listType) {
   return div;
 }
 
-function openLightbox(person) {
+function openLightbox(src, nameEn, nameUa) {
   const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lightbox-img');
-
-  // Якщо фото є — показуємо, якщо нема — ховаємо img і показуємо placeholder
-  lbImg.style.display = 'block';
-  lbImg.src = person.photo;
-  lbImg.onerror = function() {
-    this.style.display = 'none';
-    let ph = document.getElementById('lb-photo-placeholder');
-    if (!ph) {
-      ph = document.createElement('div');
-      ph.id = 'lb-photo-placeholder';
-      ph.style.cssText = 'width:120px;height:120px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:Unbounded,sans-serif;font-size:32px;font-weight:600;color:var(--accent);flex-shrink:0';
-      lb.insertBefore(ph, lb.querySelector('.lightbox-card'));
-    }
-    ph.textContent = getInitials(person.en);
-    ph.style.display = 'flex';
-  };
-  // Ховаємо старий placeholder якщо є
-  const oldPh = document.getElementById('lb-photo-placeholder');
-  if (oldPh) oldPh.style.display = 'none';
-
-  // Заповнюємо картку
-  const flagMap2 = {
-    '🇺🇦': 'UA', '🇨🇿': 'CZ', '🇵🇱': 'PL', '🇸🇰': 'SK',
-    '🇩🇪': 'DE', '🇷🇴': 'RO', '🇭🇺': 'HU', '🇷🇺': 'RU',
-    '🇧🇾': 'BY', '🇲🇩': 'MD', '🇱🇹': 'LT', '🇱🇻': 'LV',
-  };
-  const flagCode = flagMap2[person.flag] || person.flag || '';
-  document.getElementById('lb-name-en').textContent = person.en || '';
-  document.getElementById('lb-name-ua').textContent = person.ua || '';
-
-  // Показуємо прапор в картці
-  const lbFlagRow = document.getElementById('lb-flag-row');
-  const lbFlagEl  = document.getElementById('lb-flag');
-  if (lbFlagEl) {
-    if (flagCode) {
-      lbFlagEl.textContent = flagCode;
-      if (lbFlagRow) lbFlagRow.style.display = 'flex';
-    } else {
-      if (lbFlagRow) lbFlagRow.style.display = 'none';
-    }
-  }
-
-  const setLb = (id, val, rowId) => {
-    const el = document.getElementById(id);
-    const row = rowId ? document.getElementById(rowId) : null;
-    if (!val) {
-      if (el) el.textContent = '—';
-      if (el) el.className = 'lb-value muted';
-    } else {
-      if (el) el.textContent = val;
-      if (el) el.className = 'lb-value';
-    }
-    if (row) row.style.display = val ? 'flex' : 'none';
-  };
-
-  setLb('lb-viber', person.viber && person.viber !== 'Name' ? person.viber : '');
-
-  // Телефон — клікабельне посилання tel:
-  const rawPhone = person.phone && person.phone !== '+380 XX XXX XX XX' ? person.phone : '';
-  const lbPhoneEl = document.getElementById('lb-phone');
-  if (lbPhoneEl) {
-    lbPhoneEl.textContent = rawPhone || '—';
-    lbPhoneEl.className = 'lb-value phone';
-    if (rawPhone) {
-      lbPhoneEl.style.cursor = 'pointer';
-      lbPhoneEl.style.textDecoration = 'underline';
-      lbPhoneEl.onclick = (e) => {
-        e.stopPropagation();
-        window.open('tel:' + rawPhone.replace(/\s/g, ''), '_self');
-      };
-    } else {
-      lbPhoneEl.style.cursor = 'default';
-      lbPhoneEl.style.textDecoration = 'none';
-      lbPhoneEl.onclick = null;
-    }
-  }
-
-  const locker = person.locker ? '№ ' + (Array.isArray(person.locker) ? person.locker.join(', ') : person.locker) : '';
-  setLb('lb-locker',     locker,            'lb-locker-row');
-  setLb('lb-dispatcher', person.dispatcher, 'lb-dispatcher-row');
-  setLb('lb-city',       person.city,       'lb-city-row');
-
-  const dovRow = document.getElementById('lb-dovolena-row');
-  const dovEl  = document.getElementById('lb-dovolena');
-  if (person.dovolena) {
-    dovEl.textContent = person.dovolena;
-    dovRow.style.display = 'flex';
-  } else {
-    dovRow.style.display = 'none';
-  }
-
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-name-en').textContent = nameEn;
+  document.getElementById('lightbox-name-ua').textContent = nameUa || '';
   lb.classList.add('active');
 }
 
-// Закриваємо тільки при кліку на фото або на темний фон
-// Картка з інформацією НЕ закриває lightbox
-document.getElementById('lightbox').addEventListener('click', (e) => {
-  const card = document.getElementById('lightbox-card');
-  const lbImg = document.getElementById('lightbox-img');
-  const ph = document.getElementById('lb-photo-placeholder');
-  // Якщо клік на картку або її дочірні елементи — не закриваємо
-  if (card && card.contains(e.target)) return;
+document.getElementById('lightbox').addEventListener('click', () => {
   document.getElementById('lightbox').classList.remove('active');
 });
 
@@ -1816,21 +1209,6 @@ function copyToClipboard(text) {
   });
 }
 
-// showSyncToast — показує статус збереження
-let syncToastTimer = null;
-function showSyncToast(msg, type) {
-  const el = document.getElementById('sync-toast');
-  if (!el) return;
-  clearTimeout(syncToastTimer);
-  el.textContent = msg;
-  el.className = 'sync-toast ' + type;
-  el.classList.add('show');
-  syncToastTimer = setTimeout(() => el.classList.remove('show'), 3500);
-}
-
-// Дебаунс — один запит в Firebase після серії кліків
-let toggleSyncTimer = null;
-
 function toggleList(name, listType, savedScroll) {
   const isRemoving17 = set17.includes(name);
   const isRemoving19 = set19.includes(name);
@@ -1853,42 +1231,12 @@ function toggleList(name, listType, savedScroll) {
       window.scrollTo({ top: savedScroll, behavior: 'instant' });
     });
   }
-
-  // Дебаунс: один запит в Firebase після серії кліків (600мс)
-  clearTimeout(toggleSyncTimer);
-  toggleSyncTimer = setTimeout(() => {
-    if (typeof syncToFirebase === 'function') syncToFirebase();
-  }, 600);
 }
 
 // Edit modal
 function openEditModal(currentName) {
   editingName = currentName;
   document.getElementById('edit-input').value = currentName;
-
-  // Заповнюємо інфо-панель
-  const person = PEOPLE.find(p => p.en === currentName);
-
-  function setInfoVal(id, val) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (val) {
-      el.textContent = val;
-      el.classList.remove('empty');
-    } else {
-      el.textContent = '—';
-      el.classList.add('empty');
-    }
-  }
-
-  setInfoVal('info-locker',     person?.locker     ? '№ - ' + person.locker     : '');
-  setInfoVal('info-dispatcher', person?.dispatcher || '');
-  setInfoVal('info-city',       person?.city       || '');
-
-  // Dovolená — заповнюємо поле вводу
-  const dovInput = document.getElementById('dovolena-input');
-  if (dovInput) dovInput.value = person?.dovolena || '';
-
   document.getElementById('edit-modal').classList.add('active');
   setTimeout(() => document.getElementById('edit-input').focus(), 100);
 }
@@ -1899,44 +1247,31 @@ function closeEditModal() {
 }
 
 function saveEditModal() {
-  const newName     = document.getElementById('edit-input').value.trim();
-  const newDovolena = document.getElementById('dovolena-input')?.value.trim() ?? '';
+  const newName = document.getElementById('edit-input').value.trim();
   if (!newName || !editingName) { closeEditModal(); return; }
 
   const person = PEOPLE.find(p => p.en === editingName);
   if (person) {
-    const origKey   = person._origEn || editingName;
-    person._origEn  = origKey;
-    // Оновлюємо ім'я в списках 17/19
+    const origKey = person._origEn || editingName;
+    person._origEn = origKey;
+    // Оновлюємо в списках
     const i17 = set17.indexOf(editingName);
     if (i17 !== -1) set17[i17] = newName;
     const i19 = set19.indexOf(editingName);
     if (i19 !== -1) set19[i19] = newName;
-    person.en       = newName;
-    // Зберігаємо dovolena прямо в об'єкт людини
-    person.dovolena = newDovolena;
-    // Зберігаємо тільки якщо ім'я реально змінилось
-    if (origKey !== newName) {
-      editedNames[origKey] = newName;
-    } else {
-      delete editedNames[origKey];
-    }
-    // Все іде тільки в Firebase через syncToFirebase() нижче
+    person.en = newName;
+    // Зберігаємо в localStorage
+    editedNames[origKey] = newName;
+    try { localStorage.setItem('gi_group_edits', JSON.stringify(editedNames)); } catch(e) {}
   }
   closeEditModal();
   render(document.getElementById('search').value);
-  // Одразу синхронізуємо і ім'я і dovolena з Firebase
-  if (typeof syncToFirebase === 'function') syncToFirebase();
 }
 
 document.getElementById('edit-modal').addEventListener('click', (e) => {
   if (e.target === document.getElementById('edit-modal')) closeEditModal();
 });
 document.getElementById('edit-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') saveEditModal();
-  if (e.key === 'Escape') closeEditModal();
-});
-document.getElementById('dovolena-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') saveEditModal();
   if (e.key === 'Escape') closeEditModal();
 });
@@ -1965,8 +1300,6 @@ function render(query = '') {
   const filtered17 = people17.filter(match);
   const filtered19 = people19.filter(match);
 
-  const sk = document.getElementById('skeleton-list');
-  if (sk) sk.style.display = 'none';
   filtered.forEach(p => peopleList.appendChild(createCard(p, 'main')));
   document.getElementById('count').textContent = filtered.length;
   noResults.style.display = filtered.length === 0 && mainPeople.length > 0 ? 'block' : 'none';
@@ -1995,193 +1328,11 @@ function render(query = '') {
 loadData();
 render();
 
-
-// ══════════════════════════════════════════════════════════════
-// FIREBASE REALTIME DATABASE
-// ══════════════════════════════════════════════════════════════
-
-firebase.initializeApp({
-  databaseURL: "https://gi-group-list-default-rtdb.firebaseio.com",
-});
-
-const dbRef = firebase.database().ref('gigroup');
-
-// ── Стан кнопки Save ─────────────────────────────────────────
-function setBtnState(state, retryFn) {
-  const btn = document.getElementById('btn-save-main');
-  if (!btn) return;
-  btn.onclick = () => saveData();
-  if (state === 'saving') {
-    btn.textContent = '⏳ Sync...';
-    btn.style.opacity = '.6';
-    btn.style.background = 'var(--accent)';
-    btn.disabled = true;
-  }
-  if (state === 'ok') {
-    btn.textContent = '✓ Saved';
-    btn.style.opacity = '1';
-    btn.style.background = 'var(--accent)';
-    btn.disabled = false;
-    setTimeout(() => { btn.textContent = 'Save'; btn.style.background = 'var(--accent)'; }, 2000);
-  }
-  if (state === 'error') {
-    btn.textContent = '✗ Retry?';
-    btn.style.opacity = '1';
-    btn.style.background = '#ef4444';
-    btn.disabled = false;
-    if (retryFn) btn.onclick = () => { btn.style.background = 'var(--accent)'; retryFn(); };
-    setTimeout(() => { btn.textContent = 'Save'; btn.style.background = 'var(--accent)'; btn.onclick = () => saveData(); }, 5000);
-  }
-  if (state === 'offline') {
-    btn.textContent = '📵 Offline';
-    btn.style.opacity = '1';
-    btn.style.background = '#6b7280';
-    btn.disabled = false;
-    setTimeout(() => { btn.textContent = 'Save'; btn.style.background = 'var(--accent)'; }, 4000);
-  }
-}
-
-// ── Застосовуємо дані з Firebase ─────────────────────────────
-function applyRemoteData(data) {
-  if (!data) return;
-
-  // ── КРОК 1: editedNames ПЕРШИМИ — до будь-якої фільтрації ───
-  // КРИТИЧНО: в set17/set19 зберігаються відредаговані імена
-  // ('Goran Oleg 1'), тому спочатку оновлюємо p.en в PEOPLE,
-  // а вже потім перевіряємо чи є ці імена в validNames
-  if (data.editedNames && typeof data.editedNames === 'object') {
-    editedNames = data.editedNames;
-    // Прибираємо незмінені записи (orig === new)
-    Object.keys(editedNames).forEach(k => {
-      if (editedNames[k] === k) delete editedNames[k];
-    });
-    Object.entries(editedNames).forEach(([orig, newN]) => {
-      const p = PEOPLE.find(x => x._origEn === orig || x.en === orig);
-      if (p) { p._origEn = p._origEn || orig; p.en = newN; }
-    });
-  }
-
-  // ── КРОК 2: validNames — тепер враховує відредаговані імена ─
-  const validNames = new Set(PEOPLE.flatMap(p => [p.en, p._origEn].filter(Boolean)));
-  if (Array.isArray(data.set17)) set17 = data.set17.filter(n => validNames.has(n));
-  if (Array.isArray(data.set19)) set19 = data.set19.filter(n => validNames.has(n));
-
-  // ── КРОК 3: dovolena — точкове оновлення ────────────────────
-  if (data.dovolenaData && typeof data.dovolenaData === 'object') {
-    const fbKeys = new Set(Object.keys(data.dovolenaData));
-    PEOPLE.forEach(p => {
-      const key = p._origEn || p.en;
-      if (fbKeys.has(key)) p.dovolena = data.dovolenaData[key] || '';
-      else p.dovolena = '';
-    });
-  }
-
-  render(document.getElementById('search').value);
-}
-
-// ── Збираємо dovolena для збереження ─────────────────────────
-function collectDovolenaData() {
-  const result = {};
-  PEOPLE.forEach(p => {
-    if (p.dovolena) result[p._origEn || p.en] = p.dovolena;
-  });
-  return result;
-}
-
-// ── Запис у Firebase ─────────────────────────────────────────
-async function syncToFirebase() {
-  if (!fbReady) return;  // захист: не пишемо до завантаження
-
-  // Перевірка інтернету
-  if (!navigator.onLine) {
-    setBtnState('offline');
-    showSyncToast('📵 Bez internetu. Data nebyla uložena.', 'warn');
-    return;
-  }
-
-  setBtnState('saving');
-  const dovolenaData = {};
-  PEOPLE.forEach(p => {
-    const key = p._origEn || p.en;
-    if (p.dovolena) dovolenaData[key] = p.dovolena;
-  });
-
-  try {
-    // update() — не перезаписує всю базу, безпечно при одночасній роботі
-    await dbRef.update({ set17, set19, editedNames, dovolenaData, ts: Date.now() });
-    setBtnState('ok');
-  } catch (err) {
-    console.error('Firebase error:', err);
-    setBtnState('error', () => syncToFirebase());
-	showSyncToast(navigator.onLine ? '❌ Chyba. Klikněte znovu na Save.' : '📵 Bez internetu.', 'error');
-  }
-}
-
-// ── Realtime слухач ───────────────────────────────────────────
-let fbReady = false;
-dbRef.on('value', (snapshot) => {
-  const data = snapshot.val();
-  fbReady = true;
-  if (data) applyRemoteData(data);
-});
-
-// ── Перевизначаємо saveData ───────────────────────────────────
-// saveData вже містить syncToFirebase()
-
-// saveEditModal вже викликає syncToFirebase() напряму — окреме перевизначення не потрібне
-
 document.getElementById('search').addEventListener('input', e => render(e.target.value));
 
-// ── Експорт у CSV ─────────────────────────────────────────────
-function exportToCSV() {
-  const rows = [];
-
-  // Спочатку всі з 17:00, потім всі з 19:00
-  set17.forEach(name => rows.push(`${name} - (17:00)`));
-  set19.forEach(name => rows.push(`${name} - (19:00)`));
-
-  if (rows.length === 0) {
-    showExportToast('⚠️ Seznam je prázdný');
-    return;
-  }
-
-  // Формат імені файлу: GiGroup_DDMMYYYY.csv
-  const now   = new Date();
-  const dd    = String(now.getDate()).padStart(2, '0');
-  const mm    = String(now.getMonth() + 1).padStart(2, '0');
-  const yyyy  = now.getFullYear();
-  const fname = `GiGroup_${dd}${mm}${yyyy}.csv`;
-
-  // UTF-8 BOM для коректного відображення кирилиці в Excel
-  const BOM = '\uFEFF';
-  const csv = rows.join('\n') + '\n';
-
-  const blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8;' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = fname;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  showExportToast('✓ Exportováno');
-}
-
-function showExportToast(msg) {
-  const el = document.getElementById('export-toast');
-  if (!el) return;
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
-}
-
-window.addEventListener('online',  () => showSyncToast('🟢 Připojení obnoveno', 'ok'));
-window.addEventListener('offline', () => showSyncToast('📵 Internet odpojen. Změny se neuloží.', 'warn'));
-
-// pagehide/beforeunload прибрано — вони затирали дані
-// при закритті сторінки до завантаження Firebase
+// Auto-save on page hide
+window.addEventListener('pagehide', saveData);
+window.addEventListener('beforeunload', saveData);
 </script>
 </body>
 </html>
